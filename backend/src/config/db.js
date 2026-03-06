@@ -10,10 +10,10 @@ dotenv.config();
  */
 
 const dbConfig = {
-  host: process.env.DB_HOST || 'localhost',
-  port: process.env.DB_PORT || 27017,
-  name: process.env.DB_NAME || 'gittool_nhom9',
-  uri: process.env.MONGO_URI || 'mongodb://localhost:27017/gittool_nhom9',
+    host: process.env.DB_HOST || 'localhost',
+    port: process.env.DB_PORT || 27017,
+    name: process.env.DB_NAME || 'gittool_nhom9',
+    uri: process.env.MONGO_URI || 'mongodb://localhost:27017/gittool_nhom9',
 };
 
 // --- Example: Connect with Mongoose ---

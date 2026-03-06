@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const userController = require('../controllers/userController');
+const categoryRoutes = require('./categoryRoutes');
 
 /**
  * User Routes
@@ -24,5 +25,8 @@ router.put('/users/:id', userController.updateUser);
 
 // DELETE /api/users/:id - Delete a user by ID
 router.delete('/users/:id', userController.deleteUser);
+
+// Category Routes
+router.use('/categories', categoryRoutes);
 
 module.exports = router;

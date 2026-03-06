@@ -14,7 +14,10 @@ app.use(express.urlencoded({ extended: true }));
 
 // --- Routes ---
 const indexRouter = require('./src/routes/index');
+const authRouter = require('./src/routes/authRoutes');
+
 app.use('/api', indexRouter);
+app.use('/api/auth', authRouter);
 
 // --- Root Health Check ---
 app.get('/', (req, res) => {

@@ -3,6 +3,8 @@ const router = express.Router();
 
 const userController = require('../controllers/userController');
 const bookController = require('../controllers/bookController');
+const categoryRoutes = require('./categoryRoutes');
+const productRoutes = require('./productRoutes');
 
 /**
  * User Routes
@@ -56,5 +58,11 @@ router.put('/books/:id', bookController.updateBook);
 
 // DELETE /api/books/:id - Delete a book by ID
 router.delete('/books/:id', bookController.deleteBook);
+
+// Category Routes
+router.use('/categories', categoryRoutes);
+
+// Product Routes
+router.use('/products', productRoutes);
 
 module.exports = router;

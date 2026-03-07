@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -36,14 +37,56 @@
                 <code>http://localhost:5000/api</code>.
             </p>
             <button id="fetchUsersBtn" class="btn">Load Users from API</button>
+            <button id="showAddBookBtn" class="btn" style="margin-left:1rem;">Add Book</button>
         </section>
 
-        <section id="users-section">
-            <h3>Users</h3>
-            <ul id="users-list">
-                <!-- Users will be rendered here by main.js -->
-            </ul>
-        </section>
+        <!-- Container that holds add-book section and book list; hidden by default -->
+        <div id="addBookContainer" style="display:none;">
+            <section id="add-book-section" class="card">
+                <h3>Add New Book</h3>
+                <form id="addBookForm">
+                    <div class="form-group">
+                        <label for="title">Title *</label>
+                        <input type="text" id="title" name="title" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="author">Author *</label>
+                        <input type="text" id="author" name="author" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="isbn">ISBN</label>
+                        <input type="text" id="isbn" name="isbn" />
+                    </div>
+                    <div class="form-group">
+                        <label for="publisher">Publisher</label>
+                        <input type="text" id="publisher" name="publisher" />
+                    </div>
+                    <div class="form-group">
+                        <label for="year">Year</label>
+                        <input type="number" id="year" name="year" />
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <input type="text" id="category" name="category" />
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Price</label>
+                        <input type="number" step="0.01" id="price" name="price" />
+                    </div>
+                    <button type="submit" class="btn">Add Book</button>
+                    <p id="form-message" class="message"></p>
+                </form>
+            </section>
+
+            <!-- Book list display -->
+            <section id="books-section">
+                <h3>Books</h3>
+                <ul id="books-list">
+                    <!-- Books will appear here -->
+                </ul>
+            </section>
+        </div>
+
     </main>
 
     <footer class="footer">

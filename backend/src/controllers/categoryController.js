@@ -12,7 +12,7 @@ exports.getCategories = async (req, res) => {
             data: categories,
         });
     } catch (err) {
-        res.status(400).json({ success: false, error: err.message });
+        res.status(500).json({ success: false, message: err.message });
     }
 };
 
@@ -27,7 +27,11 @@ exports.getCategory = async (req, res) => {
         }
         res.status(200).json({ success: true, data: category });
     } catch (err) {
-        res.status(400).json({ success: false, error: err.message });
+        // Handle invalid ObjectId format
+        if (err.kind === 'ObjectId') {
+            return res.status(400).json({ success: false, message: 'Invalid category ID format' });
+        }
+        res.status(500).json({ success: false, message: err.message });
     }
 };
 
@@ -36,10 +40,36 @@ exports.getCategory = async (req, res) => {
 // @access  Public
 exports.createCategory = async (req, res) => {
     try {
-        const category = await Category.create(req.body);
-        res.status(201).json({ success: true, data: category });
+        // Sanitize input
+        const categoryData = {};
+        if (req.body.name !== undefined) categoryData.name = String(req.body.name).trim();
+        if (req.body.description !== undefined) categoryData.description = String(req.body.description).trim();
+        if (req.body.color !== undefined) categoryData.color = String(req.body.color).trim();
+
+        const category = await Category.create(categoryData);
+        res.status(201).json({
+            success: true,
+            message: 'Category created successfully',
+            data: category,
+        });
     } catch (err) {
-        res.status(400).json({ success: false, error: err.message });
+        // Handle Mongoose validation errors with consistent format
+        if (err.name === 'ValidationError') {
+            const errors = Object.values(err.errors).map((e) => e.message);
+            return res.status(400).json({
+                success: false,
+                message: 'Data validation failed',
+                errors,
+            });
+        }
+        // Handle duplicate key error (unique constraint)
+        if (err.code === 11000) {
+            return res.status(409).json({
+                success: false,
+                message: 'Category name already exists',
+            });
+        }
+        res.status(500).json({ success: false, message: err.message });
     }
 };
 
@@ -48,16 +78,64 @@ exports.createCategory = async (req, res) => {
 // @access  Public
 exports.updateCategory = async (req, res) => {
     try {
-        const category = await Category.findByIdAndUpdate(req.params.id, req.body, {
+        // Whitelist allowed fields for update
+        const allowedFields = ['name', 'description', 'color'];
+        const updateData = {};
+        allowedFields.forEach((field) => {
+            if (req.body[field] !== undefined) {
+                updateData[field] = typeof req.body[field] === 'string'
+                    ? req.body[field].trim()
+                    : req.body[field];
+            }
+        });
+
+        // Check if body contains any updatable fields
+        if (Object.keys(updateData).length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Request body is empty or contains no updatable fields',
+            });
+        }
+
+        const category = await Category.findByIdAndUpdate(req.params.id, updateData, {
             new: true,
             runValidators: true,
         });
+
         if (!category) {
-            return res.status(404).json({ success: false, message: 'Category not found' });
+            return res.status(404).json({
+                success: false,
+                message: 'Category not found',
+            });
         }
-        res.status(200).json({ success: true, data: category });
+
+        res.status(200).json({
+            success: true,
+            message: 'Category updated successfully',
+            data: category,
+        });
     } catch (err) {
-        res.status(400).json({ success: false, error: err.message });
+        // Handle invalid ObjectId format
+        if (err.kind === 'ObjectId') {
+            return res.status(400).json({ success: false, message: 'Invalid category ID format' });
+        }
+        // Handle Mongoose validation errors with consistent format
+        if (err.name === 'ValidationError') {
+            const errors = Object.values(err.errors).map((e) => e.message);
+            return res.status(400).json({
+                success: false,
+                message: 'Data validation failed',
+                errors,
+            });
+        }
+        // Handle duplicate key error (unique constraint)
+        if (err.code === 11000) {
+            return res.status(409).json({
+                success: false,
+                message: 'Category name already exists',
+            });
+        }
+        res.status(500).json({ success: false, message: err.message });
     }
 };
 
@@ -70,8 +148,16 @@ exports.deleteCategory = async (req, res) => {
         if (!category) {
             return res.status(404).json({ success: false, message: 'Category not found' });
         }
-        res.status(200).json({ success: true, data: {} });
+        res.status(200).json({
+            success: true,
+            message: 'Category deleted successfully',
+            data: {},
+        });
     } catch (err) {
-        res.status(400).json({ success: false, error: err.message });
+        // Handle invalid ObjectId format
+        if (err.kind === 'ObjectId') {
+            return res.status(400).json({ success: false, message: 'Invalid category ID format' });
+        }
+        res.status(500).json({ success: false, message: err.message });
     }
 };

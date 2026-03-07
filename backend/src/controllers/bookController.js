@@ -139,30 +139,47 @@ const createBook = (req, res) => {
 // PUT /api/books/:id - Update a book
 const updateBook = (req, res) => {
     try {
+        // Whitelist allowed fields for update
+        const allowedFields = ['title', 'author', 'isbn', 'publisher', 'year', 'category', 'price'];
+        const updateData = {};
+        allowedFields.forEach((field) => {
+            if (req.body[field] !== undefined) {
+                updateData[field] = req.body[field];
+            }
+        });
+
+        // Check if body contains any updatable fields
+        if (Object.keys(updateData).length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Request body is empty or contains no updatable fields',
+            });
+        }
+
+        // Check if book exists
         const existingBook = bookModel.findById(req.params.id);
         if (!existingBook) {
-            return res.status(404).json({ success: false, message: 'Book not found' });
-        }
-        
-        if (req.body.year && isNaN(req.body.year)) {
-            return res.status(400).json({ 
-                success: false, 
-                message: 'Year must be a valid number' 
+            return res.status(404).json({
+                success: false,
+                message: 'Book not found',
             });
         }
-        
-        if (req.body.price && isNaN(req.body.price)) {
-            return res.status(400).json({ 
-                success: false, 
-                message: 'Price must be a valid number' 
+
+        // Validate only the provided fields (partial update validation)
+        const validation = bookModel.validateUpdateData(updateData);
+        if (!validation.isValid) {
+            return res.status(400).json({
+                success: false,
+                message: 'Data validation failed',
+                errors: validation.errors,
             });
         }
-        
-        const updatedBook = bookModel.update(req.params.id, req.body);
-        res.status(200).json({ 
-            success: true, 
+
+        const updatedBook = bookModel.update(req.params.id, updateData);
+        res.status(200).json({
+            success: true,
             message: 'Book updated successfully',
-            data: updatedBook 
+            data: updatedBook,
         });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });

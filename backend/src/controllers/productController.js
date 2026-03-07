@@ -249,6 +249,23 @@ const updateProduct = (req, res) => {
             });
         }
 
+        // Whitelist allowed fields for update
+        const allowedFields = ['name', 'category', 'price', 'description', 'stock', 'image'];
+        const updateData = {};
+        allowedFields.forEach((field) => {
+            if (req.body[field] !== undefined) {
+                updateData[field] = req.body[field];
+            }
+        });
+
+        // Check if body contains any updatable fields
+        if (Object.keys(updateData).length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Request body is empty or contains no updatable fields',
+            });
+        }
+
         // Check if product exists
         const existingProduct = productModel.findById(id);
         if (!existingProduct) {
@@ -258,9 +275,8 @@ const updateProduct = (req, res) => {
             });
         }
 
-        // Validate data if provided
-        const dataToValidate = { ...existingProduct, ...req.body };
-        const validation = productModel.validateProductData(dataToValidate);
+        // Validate only the provided fields (partial update validation)
+        const validation = productModel.validateUpdateData(updateData);
 
         if (!validation.isValid) {
             return res.status(400).json({
@@ -270,7 +286,7 @@ const updateProduct = (req, res) => {
             });
         }
 
-        const updatedProduct = productModel.update(id, req.body);
+        const updatedProduct = productModel.update(id, updateData);
         res.status(200).json({
             success: true,
             message: 'Product updated successfully',

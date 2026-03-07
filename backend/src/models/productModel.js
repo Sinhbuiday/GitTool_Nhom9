@@ -46,32 +46,106 @@ let products = [
 // Helper: generate a simple unique ID
 const generateId = () => Date.now().toString();
 
-// Validate product data
+// Helper: validate URL format
+const isValidUrl = (string) => {
+    try {
+        new URL(string);
+        return true;
+    } catch (_) {
+        return false;
+    }
+};
+
+// Validate product data (for creation — all required fields checked)
 const validateProductData = (data) => {
     const errors = [];
     
-    if (!data.name || data.name.trim() === '') {
+    if (!data.name || (typeof data.name === 'string' && data.name.trim() === '')) {
         errors.push('Product name is required');
+    } else if (typeof data.name !== 'string') {
+        errors.push('Product name must be a string');
     }
     
-    if (!data.category || data.category.trim() === '') {
+    if (!data.category || (typeof data.category === 'string' && data.category.trim() === '')) {
         errors.push('Category is required');
+    } else if (typeof data.category !== 'string') {
+        errors.push('Category must be a string');
     }
     
     if (data.price === undefined || data.price === null) {
         errors.push('Price is required');
-    } else if (typeof data.price !== 'number' || data.price < 0) {
-        errors.push('Price must be a positive number');
-    }
-    
-    if (data.stock !== undefined && data.stock !== null) {
-        if (typeof data.stock !== 'number' || data.stock < 0) {
-            errors.push('Stock must be a non-negative number');
+    } else {
+        const price = Number(data.price);
+        if (isNaN(price) || price <= 0) {
+            errors.push('Price must be a positive number');
         }
     }
     
-    if (data.description && typeof data.description !== 'string') {
-        errors.push('Description must be a string');
+    if (data.stock !== undefined && data.stock !== null) {
+        const stock = Number(data.stock);
+        if (isNaN(stock) || stock < 0 || !Number.isInteger(stock)) {
+            errors.push('Stock must be a non-negative integer');
+        }
+    }
+    
+    if (data.description !== undefined && data.description !== null && data.description !== '') {
+        if (typeof data.description !== 'string') {
+            errors.push('Description must be a string');
+        }
+    }
+
+    if (data.image !== undefined && data.image !== null && data.image !== '') {
+        if (typeof data.image !== 'string' || !isValidUrl(data.image)) {
+            errors.push('Image must be a valid URL');
+        }
+    }
+    
+    return {
+        isValid: errors.length === 0,
+        errors,
+    };
+};
+
+// Validate product data for update (partial — only validates provided fields)
+const validateUpdateData = (data) => {
+    const errors = [];
+    
+    if (data.name !== undefined) {
+        if (typeof data.name !== 'string' || data.name.trim() === '') {
+            errors.push('Product name must be a non-empty string');
+        }
+    }
+    
+    if (data.category !== undefined) {
+        if (typeof data.category !== 'string' || data.category.trim() === '') {
+            errors.push('Category must be a non-empty string');
+        }
+    }
+    
+    if (data.price !== undefined) {
+        const price = Number(data.price);
+        if (isNaN(price) || price <= 0) {
+            errors.push('Price must be a positive number');
+        }
+    }
+    
+    if (data.stock !== undefined) {
+        const stock = Number(data.stock);
+        if (isNaN(stock) || stock < 0 || !Number.isInteger(stock)) {
+            errors.push('Stock must be a non-negative integer');
+        }
+    }
+    
+    if (data.description !== undefined && data.description !== null) {
+        if (typeof data.description !== 'string') {
+            errors.push('Description must be a string');
+        }
+    }
+
+    if (data.image !== undefined && data.image !== null && data.image !== '') {
+        if (typeof data.image !== 'string' || !isValidUrl(data.image)) {
+            errors.push('Image must be a valid URL');
+        }
     }
     
     return {
@@ -147,19 +221,22 @@ const create = ({ name, category, price, description, stock, image }) => {
     return newProduct;
 };
 
-// Update a product by ID
+// Update a product by ID (protects immutable fields: id, createdAt)
 const update = (id, data) => {
     const index = products.findIndex((p) => p.id === id);
     if (index === -1) return null;
+
+    // Strip immutable fields to prevent override
+    const { id: _id, createdAt: _createdAt, updatedAt: _updatedAt, ...safeData } = data;
     
     const updatedProduct = {
         ...products[index],
-        ...(data.name && { name: data.name.trim() }),
-        ...(data.category && { category: data.category.trim() }),
-        ...(data.price !== undefined && { price: data.price }),
-        ...(data.description !== undefined && { description: data.description }),
-        ...(data.stock !== undefined && { stock: data.stock }),
-        ...(data.image && { image: data.image }),
+        ...(safeData.name !== undefined && { name: String(safeData.name).trim() }),
+        ...(safeData.category !== undefined && { category: String(safeData.category).trim() }),
+        ...(safeData.price !== undefined && { price: Number(safeData.price) }),
+        ...(safeData.description !== undefined && { description: String(safeData.description).trim() }),
+        ...(safeData.stock !== undefined && { stock: Number(safeData.stock) }),
+        ...(safeData.image !== undefined && { image: String(safeData.image).trim() }),
         updatedAt: new Date(),
     };
     
@@ -237,4 +314,5 @@ module.exports = {
     findWithPagination,
     getLowStockProducts,
     validateProductData,
+    validateUpdateData,
 };

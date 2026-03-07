@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 const userController = require('../controllers/userController');
+const categoryRoutes = require('./categoryRoutes');
+const productRoutes = require('./productRoutes');
 
 /**
  * User Routes
@@ -24,5 +26,11 @@ router.put('/users/:id', userController.updateUser);
 
 // DELETE /api/users/:id - Delete a user by ID
 router.delete('/users/:id', userController.deleteUser);
+
+// Category Routes
+router.use('/categories', categoryRoutes);
+
+// Product Routes
+router.use('/products', productRoutes);
 
 module.exports = router;

@@ -352,8 +352,9 @@ function setupEventListeners() {
 
     editBtn.addEventListener('click', () => {
         if (!currentProduct) return;
+        const productToEdit = currentProduct;
         closeViewModal();
-        openEditModal(currentProduct);
+        openEditModal(productToEdit);
     });
 
     deleteBtn.addEventListener('click', () => {

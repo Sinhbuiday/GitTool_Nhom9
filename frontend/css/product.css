@@ -1,6 +1,6 @@
-/* =============================================
-   Product Page Styles
-   ============================================= */
+/* =====================================
+   PRODUCT PAGE STYLES - COMPLETE v2.0
+   ===================================== */
 
 .product-dashboard {
     padding: 2rem 1.5rem;
@@ -8,9 +8,7 @@
     margin: 0 auto;
 }
 
-/* =============================================
-   Glass Card
-   ============================================= */
+/* ===== GLASS CARD ===== */
 .glass-card {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
@@ -34,9 +32,7 @@
     font-weight: 700;
 }
 
-/* =============================================
-   Product Form
-   ============================================= */
+/* ===== PRODUCT FORM ===== */
 .product-form {
     display: flex;
     flex-direction: column;
@@ -47,6 +43,12 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
 }
 
 .input-container {
@@ -82,9 +84,12 @@
     color: #999;
 }
 
-/* =============================================
-   Button Styles
-   ============================================= */
+textarea.premium-input {
+    resize: vertical;
+    font-family: inherit;
+}
+
+/* ===== BUTTONS ===== */
 .btn-premium {
     padding: 0.875rem 2rem;
     background: linear-gradient(135deg, #1a73e8, #1557c0);
@@ -108,9 +113,58 @@
     transform: translateY(0);
 }
 
-/* =============================================
-   Filter Section
-   ============================================= */
+.btn-primary {
+    flex: 1;
+    padding: 0.75rem;
+    background: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+    background: #1557c0;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    flex: 1;
+    padding: 0.75rem;
+    background: #f0f0f0;
+    color: #333;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background: #e0e0e0;
+    transform: translateY(-2px);
+}
+
+.btn-danger {
+    flex: 1;
+    padding: 0.75rem;
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-danger:hover {
+    background: #dc2626;
+    transform: translateY(-2px);
+}
+
+/* ===== FILTER SECTION ===== */
 .filter-section {
     margin-bottom: 2rem;
 }
@@ -127,9 +181,7 @@
     }
 }
 
-/* =============================================
-   Product Grid
-   ============================================= */
+/* ===== PRODUCT GRID ===== */
 .product-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -148,9 +200,7 @@
     }
 }
 
-/* =============================================
-   Product Card
-   ============================================= */
+/* ===== PRODUCT CARD ===== */
 .product-card {
     background: white;
     border-radius: 12px;
@@ -276,9 +326,7 @@
     box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
 }
 
-/* =============================================
-   Modal
-   ============================================= */
+/* ===== MODALS ===== */
 .modal {
     display: flex;
     position: fixed;
@@ -291,6 +339,7 @@
     align-items: center;
     justify-content: center;
     animation: fadeIn 0.3s ease;
+    overflow-y: auto;
 }
 
 .modal.hidden {
@@ -302,11 +351,47 @@
     border-radius: 16px;
     max-width: 600px;
     width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
     position: relative;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     animation: slideUp 0.3s ease;
+    margin: auto;
+}
+
+.modal-view .modal-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.modal-edit {
+    max-width: 600px;
+}
+
+.modal-edit h2 {
+    padding: 2rem 2rem 0;
+    margin: 0;
+    font-size: 1.5rem;
+    color: #1a1a1a;
+}
+
+.modal-edit .product-form {
+    padding: 1.5rem 2rem 2rem;
+}
+
+.modal-form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.modal-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    gap: 1rem;
 }
 
 @keyframes slideUp {
@@ -418,43 +503,7 @@
     gap: 1rem;
 }
 
-.btn-primary {
-    flex: 1;
-    padding: 0.75rem;
-    background: #1a73e8;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.btn-primary:hover {
-    background: #1557c0;
-    transform: translateY(-2px);
-}
-
-.btn-danger {
-    flex: 1;
-    padding: 0.75rem;
-    background: #ef4444;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.btn-danger:hover {
-    background: #dc2626;
-    transform: translateY(-2px);
-}
-
-/* =============================================
-   Empty State
-   ============================================= */
+/* ===== EMPTY STATE ===== */
 .empty-state {
     display: flex;
     flex-direction: column;
@@ -477,19 +526,42 @@
     margin: 0;
 }
 
-/* =============================================
-   Messages
-   ============================================= */
-.error-message,
-.success-message {
+/* ===== TOAST NOTIFICATIONS ===== */
+.toast-container {
     position: fixed;
     top: 20px;
     right: 20px;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
     padding: 1rem 1.5rem;
     border-radius: 8px;
     font-weight: 600;
     animation: slideInRight 0.3s ease;
-    z-index: 999;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.toast.error {
+    background: #fee2e2;
+    color: #991b1b;
+    border-left: 4px solid #ef4444;
+}
+
+.toast.success {
+    background: #dcfce7;
+    color: #166534;
+    border-left: 4px solid #10b981;
+}
+
+.toast.fade-out {
+    animation: fadeOut 0.3s ease forwards;
 }
 
 @keyframes slideInRight {
@@ -503,21 +575,38 @@
     }
 }
 
-.error-message {
-    background: #fee;
-    color: #c33;
-    border: 2px solid #f88;
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(400px);
+    }
 }
 
-.success-message {
-    background: #efe;
-    color: #3c3;
-    border: 2px solid #8f8;
+/* ===== SPINNER/LOADER ===== */
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #1a73e8;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
 }
 
-/* =============================================
-   Responsive
-   ============================================= */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#loadingText {
+    color: #666;
+    font-weight: 600;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
     .product-dashboard {
         padding: 1rem;
@@ -527,13 +616,23 @@
         padding: 1.5rem;
     }
 
-    .form-row {
-        grid-template-columns: 1fr;
+    .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
     }
 
-    .product-grid {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 1.5rem;
+    .modal-content {
+        width: 95%;
+        border-radius: 12px;
+    }
+
+    .modal-body {
+        gap: 1rem;
+        padding: 1.5rem;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
     }
 }
 
@@ -542,7 +641,14 @@
         grid-template-columns: 1fr;
     }
 
-    .modal-body {
-        padding: 1.5rem;
+    .toast-container {
+        left: 10px;
+        right: 10px;
+    }
+
+    .toast {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
     }
 }
+

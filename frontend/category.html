@@ -60,6 +60,39 @@
 
     </main>
 
+    <!-- Edit Category Modal -->
+    <div id="editCategoryModal" class="modal hidden">
+        <div class="modal-content modal-edit-cat">
+            <button class="modal-close" id="closeEditCatModal">&times;</button>
+            <h2>Edit Category</h2>
+            <form id="editCategoryForm" class="edit-category-form">
+                <div class="input-container">
+                    <label for="editCatName">Name</label>
+                    <input type="text" id="editCatName" class="premium-input" placeholder="Category name" required>
+                </div>
+                <div class="input-container">
+                    <label for="editCatDesc">Description</label>
+                    <textarea id="editCatDesc" class="premium-input" placeholder="Brief details about this category" rows="3"></textarea>
+                </div>
+                <div class="modal-form-actions">
+                    <button type="submit" class="btn-save">Save Changes</button>
+                    <button type="button" class="btn-cancel" id="cancelEditCatBtn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Loading Modal -->
+    <div id="loadingModal" class="modal hidden">
+        <div class="modal-content modal-loading">
+            <div class="spinner"></div>
+            <p id="loadingText">Loading...</p>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
     <footer class="footer">
         <div class="container">
             <p>&copy; 2026 GitTool Team 9. Designed with Excellence.</p>

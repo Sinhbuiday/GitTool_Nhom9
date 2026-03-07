@@ -146,8 +146,8 @@ async function updateProduct(id, productData) {
         if (json.success) {
             const index = allProducts.findIndex(p => p.id === id);
             if (index !== -1) allProducts[index] = json.data;
-            filteredProducts = [...allProducts];
-            renderProducts();
+            applyFilters();
+            populateCategoryFilter();
             closeEditModalFunc();
             closeViewModal();
             showSuccess('✅ Product updated successfully!');
@@ -352,8 +352,9 @@ function setupEventListeners() {
 
     editBtn.addEventListener('click', () => {
         if (!currentProduct) return;
+        const productToEdit = currentProduct;
         closeViewModal();
-        openEditModal(currentProduct);
+        openEditModal(productToEdit);
     });
 
     deleteBtn.addEventListener('click', () => {

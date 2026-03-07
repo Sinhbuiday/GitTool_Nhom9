@@ -7,6 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GitTool - Nhom9</title>
     <link rel="stylesheet" href="css/style.css" />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -38,6 +42,14 @@
             </p>
             <button id="fetchUsersBtn" class="btn">Load Users from API</button>
             <button id="showAddBookBtn" class="btn" style="margin-left:1rem;">Add Book</button>
+        </section>
+
+        <!-- Users Section -->
+        <section id="users-section" style="display:none;">
+            <h3>Users</h3>
+            <ul id="users-list">
+                <!-- Users will appear here -->
+            </ul>
         </section>
 
         <!-- Container that holds add-book section and book list; hidden by default -->
@@ -88,6 +100,81 @@
         </div>
 
     </main>
+
+    <!-- Edit Book Modal -->
+    <div id="editBookModal" class="modal hidden">
+        <div class="modal-content modal-edit-form">
+            <button class="modal-close" id="closeEditBookModal">&times;</button>
+            <h2 class="modal-title">Edit Book</h2>
+            <form id="editBookForm" class="modal-form">
+                <div class="form-group">
+                    <label for="editBookTitle">Title *</label>
+                    <input type="text" id="editBookTitle" name="title" required />
+                </div>
+                <div class="form-group">
+                    <label for="editBookAuthor">Author *</label>
+                    <input type="text" id="editBookAuthor" name="author" required />
+                </div>
+                <div class="form-group">
+                    <label for="editBookIsbn">ISBN</label>
+                    <input type="text" id="editBookIsbn" name="isbn" />
+                </div>
+                <div class="form-group">
+                    <label for="editBookPublisher">Publisher</label>
+                    <input type="text" id="editBookPublisher" name="publisher" />
+                </div>
+                <div class="form-group">
+                    <label for="editBookYear">Year</label>
+                    <input type="number" id="editBookYear" name="year" />
+                </div>
+                <div class="form-group">
+                    <label for="editBookCategory">Category</label>
+                    <input type="text" id="editBookCategory" name="category" />
+                </div>
+                <div class="form-group">
+                    <label for="editBookPrice">Price</label>
+                    <input type="number" step="0.01" id="editBookPrice" name="price" />
+                </div>
+                <div class="modal-form-actions">
+                    <button type="submit" class="btn btn-save">Save Changes</button>
+                    <button type="button" class="btn btn-cancel" id="cancelEditBookBtn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div id="editUserModal" class="modal hidden">
+        <div class="modal-content modal-edit-form">
+            <button class="modal-close" id="closeEditUserModal">&times;</button>
+            <h2 class="modal-title">Edit User</h2>
+            <form id="editUserForm" class="modal-form">
+                <div class="form-group">
+                    <label for="editUserName">Name *</label>
+                    <input type="text" id="editUserName" name="name" required />
+                </div>
+                <div class="form-group">
+                    <label for="editUserEmail">Email *</label>
+                    <input type="email" id="editUserEmail" name="email" required />
+                </div>
+                <div class="modal-form-actions">
+                    <button type="submit" class="btn btn-save">Save Changes</button>
+                    <button type="button" class="btn btn-cancel" id="cancelEditUserBtn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Loading Modal -->
+    <div id="loadingModal" class="modal hidden">
+        <div class="modal-content modal-loading">
+            <div class="spinner"></div>
+            <p id="loadingText">Loading...</p>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
 
     <footer class="footer">
         <div class="container">

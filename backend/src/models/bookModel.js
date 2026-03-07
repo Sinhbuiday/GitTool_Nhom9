@@ -1,13 +1,11 @@
-<<<<<<< HEAD
 /**
  * Book Model
  *
  * Responsible for data access and manipulation for books.
  * Currently uses an in-memory array as a placeholder.
- * Replace with actual database calls (e.g., mongoose) when connecting a DB.
  */
 
-// In-memory data store (placeholder — replace with DB queries)
+// In-memory data store - Hợp nhất dữ liệu từ cả hai nhánh
 let books = [
     { 
         id: '1', 
@@ -29,20 +27,21 @@ let books = [
         category: 'Classic Fiction',
         price: 14.99
     },
+    { id: '101', title: 'Đắc Nhân Tâm', author: 'Dale Carnegie', category: 'Kỹ năng sống', price: 80000 },
+    { id: '102', title: 'Tuổi Trẻ Đáng Giá Bao Nhiêu', author: 'Rosie Nguyễn', category: 'Phát triển bản thân', price: 70000 },
+    { id: '103', title: 'Nhà Giả Kim', author: 'Paulo Coelho', category: 'Tiểu thuyết', price: 65000 },
+    { id: '104', title: 'Lược Sử Thời Gian', author: 'Stephen Hawking', category: 'Khoa học', price: 120000 },
+    { id: '105', title: 'Không Gia Đình', author: 'Hector Malot', category: 'Văn học', price: 95000 }
 ];
 
 // Helper: generate a simple unique ID
 const generateId = () => Date.now().toString();
 
 // Find all books
-const findAll = () => {
-    return books;
-};
+const findAll = () => books;
 
 // Find a book by ID
-const findById = (id) => {
-    return books.find((b) => b.id === id) || null;
-};
+const findById = (id) => books.find((b) => b.id === id) || null;
 
 // Find books by author
 const findByAuthor = (author) => {
@@ -68,7 +67,6 @@ const searchByTitle = (title) => {
 // Create a new book
 const create = (bookData) => {
     const { title, author, isbn, publisher, year, category, price } = bookData;
-    
     const newBook = { 
         id: generateId(), 
         title, 
@@ -79,7 +77,6 @@ const create = (bookData) => {
         category, 
         price 
     };
-    
     books.push(newBook);
     return newBook;
 };
@@ -88,7 +85,7 @@ const create = (bookData) => {
 const update = (id, data) => {
     const index = books.findIndex((b) => b.id === id);
     if (index === -1) return null;
-    books[index] = { ...books[index], ...data, id }; // prevent id overwrite
+    books[index] = { ...books[index], ...data, id }; 
     return books[index];
 };
 
@@ -101,9 +98,7 @@ const remove = (id) => {
 };
 
 // Get total number of books
-const count = () => {
-    return books.length;
-};
+const count = () => books.length;
 
 module.exports = {
     findAll,
@@ -116,17 +111,3 @@ module.exports = {
     remove,
     count,
 };
-=======
-let books = [
-  { id: '101', title: 'Đắc Nhân Tâm', author: 'Dale Carnegie', genre: 'Kỹ năng sống', status: 'available' },
-  { id: '102', title: 'Tuổi Trẻ Đáng Giá Bao Nhiêu', author: 'Rosie Nguyễn', genre: 'Phát triển bản thân', status: 'borrowed' },
-  { id: '103', title: 'Nhà Giả Kim', author: 'Paulo Coelho', genre: 'Tiểu thuyết', status: 'available' },
-  { id: '104', title: 'Lược Sử Thời Gian', author: 'Stephen Hawking', genre: 'Khoa học', status: 'borrowed' },
-  { id: '105', title: 'Không Gia Đình', author: 'Hector Malot', genre: 'Văn học', status: 'available' }
-];
-
-const findAll = () => books;
-const findById = (id) => books.find((b) => b.id === id) || null;
-
-module.exports = { findAll, findById };
->>>>>>> develop

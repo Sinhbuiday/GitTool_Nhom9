@@ -5,9 +5,15 @@ const {
     getAllProducts,
     getProductById,
     getProductsByCategory,
+    searchProducts,
+    filterProducts,
+    getAllCategories,
+    getLowStockProducts,
     createProduct,
     updateProduct,
     deleteProduct,
+    purchaseProduct,
+    restockProduct,
 } = require('../controllers/productController');
 
 /**
@@ -15,22 +21,26 @@ const {
  * Base path: /api/products
  */
 
-// GET /api/products - Get all products
-router.get('/', getAllProducts);
+// Special routes (must be before /:id)
+router.get('/categories/all', getAllCategories);
+router.get('/low-stock/:threshold', getLowStockProducts);
+router.get('/search', searchProducts);
+router.get('/filter', filterProducts);
 
-// GET /api/products/:id - Get a single product by ID
-router.get('/:id', getProductById);
-
-// GET /api/products/category/:category - Get products by category (must be before /:id)
+// Category-based route (must be before /:id)
 router.get('/category/:category', getProductsByCategory);
 
-// POST /api/products - Create a new product
+// Standard CRUD routes
+router.get('/', getAllProducts);
+router.get('/:id', getProductById);
+
+// POST routes for stock management
 router.post('/', createProduct);
+router.post('/:id/buy/:quantity', purchaseProduct);
+router.post('/:id/restock/:quantity', restockProduct);
 
-// PUT /api/products/:id - Update a product by ID
+// PUT and DELETE routes
 router.put('/:id', updateProduct);
-
-// DELETE /api/products/:id - Delete a product by ID
 router.delete('/:id', deleteProduct);
 
 module.exports = router;

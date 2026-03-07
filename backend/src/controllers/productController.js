@@ -7,10 +7,86 @@ const productModel = require('../models/productModel');
  * Sits between the Route (receives request) and the Model (accesses data).
  */
 
-// GET /api/products - Get all products
+// Helper function to validate request
+const validateRequest = (data, requiredFields) => {
+    const errors = [];
+    requiredFields.forEach((field) => {
+        if (!data[field]) {
+            errors.push(`${field} is required`);
+        }
+    });
+    return {
+        isValid: errors.length === 0,
+        errors,
+    };
+};
+
+// GET /api/products - Get all products with optional pagination
 const getAllProducts = (req, res) => {
     try {
-        const products = productModel.findAll();
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+
+        if (page < 1 || limit < 1) {
+            return res.status(400).json({
+                success: false,
+                message: 'Page and limit must be greater than 0',
+            });
+        }
+
+        const result = productModel.findWithPagination(page, limit);
+        res.status(200).json({
+            success: true,
+            data: result.data,
+            pagination: result.pagination,
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// GET /api/products/:id - Get a single product by ID
+const getProductById = (req, res) => {
+    try {
+        const { id } = req.params;
+
+        if (!id || id.trim() === '') {
+            return res.status(400).json({
+                success: false,
+                message: 'Product ID is required',
+            });
+        }
+
+        const product = productModel.findById(id);
+        if (!product) {
+            return res.status(404).json({
+                success: false,
+                message: 'Product not found',
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            data: product,
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// GET /api/products/category/:category - Get products by category
+const getProductsByCategory = (req, res) => {
+    try {
+        const { category } = req.params;
+
+        if (!category || category.trim() === '') {
+            return res.status(400).json({
+                success: false,
+                message: 'Category is required',
+            });
+        }
+
+        const products = productModel.findByCategory(category);
         res.status(200).json({
             success: true,
             count: products.length,
@@ -21,23 +97,85 @@ const getAllProducts = (req, res) => {
     }
 };
 
-// GET /api/products/:id - Get a single product by ID
-const getProductById = (req, res) => {
+// GET /api/products/search?q=keyword - Search products by name or description
+const searchProducts = (req, res) => {
     try {
-        const product = productModel.findById(req.params.id);
-        if (!product) {
-            return res.status(404).json({ success: false, message: 'Product not found' });
+        const { q } = req.query;
+
+        if (!q || q.trim() === '') {
+            return res.status(400).json({
+                success: false,
+                message: 'Search query is required',
+            });
         }
-        res.status(200).json({ success: true, data: product });
+
+        const products = productModel.search(q);
+        res.status(200).json({
+            success: true,
+            count: products.length,
+            data: products,
+        });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
 };
 
-// GET /api/products/category/:category - Get products by category
-const getProductsByCategory = (req, res) => {
+// GET /api/products/filter - Filter products by multiple criteria
+const filterProducts = (req, res) => {
     try {
-        const products = productModel.findByCategory(req.params.category);
+        const criteria = {
+            category: req.query.category,
+            minPrice: req.query.minPrice ? parseFloat(req.query.minPrice) : null,
+            maxPrice: req.query.maxPrice ? parseFloat(req.query.maxPrice) : null,
+            inStock: req.query.inStock === 'true',
+        };
+
+        // Validate price filters
+        if (criteria.minPrice && criteria.maxPrice && criteria.minPrice > criteria.maxPrice) {
+            return res.status(400).json({
+                success: false,
+                message: 'minPrice cannot be greater than maxPrice',
+            });
+        }
+
+        const products = productModel.filter(criteria);
+        res.status(200).json({
+            success: true,
+            count: products.length,
+            data: products,
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// GET /api/products/categories/all - Get all unique categories
+const getAllCategories = (req, res) => {
+    try {
+        const categories = productModel.getAllCategories();
+        res.status(200).json({
+            success: true,
+            count: categories.length,
+            data: categories,
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// GET /api/products/low-stock/:threshold - Get products with low stock
+const getLowStockProducts = (req, res) => {
+    try {
+        const threshold = parseInt(req.params.threshold) || 10;
+
+        if (threshold < 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Threshold must be a non-negative number',
+            });
+        }
+
+        const products = productModel.getLowStockProducts(threshold);
         res.status(200).json({
             success: true,
             count: products.length,
@@ -52,14 +190,48 @@ const getProductsByCategory = (req, res) => {
 const createProduct = (req, res) => {
     try {
         const { name, category, price, description, stock, image } = req.body;
-        if (!name || !category || price === undefined) {
+
+        // Validate required fields
+        const validation = validateRequest(req.body, ['name', 'category', 'price']);
+        if (!validation.isValid) {
             return res.status(400).json({
                 success: false,
-                message: 'Name, category, and price are required',
+                message: 'Validation failed',
+                errors: validation.errors,
             });
         }
-        const newProduct = productModel.create({ name, category, price, description, stock, image });
-        res.status(201).json({ success: true, data: newProduct });
+
+        // Validate data using model
+        const dataValidation = productModel.validateProductData({
+            name,
+            category,
+            price,
+            description,
+            stock,
+        });
+
+        if (!dataValidation.isValid) {
+            return res.status(400).json({
+                success: false,
+                message: 'Data validation failed',
+                errors: dataValidation.errors,
+            });
+        }
+
+        const newProduct = productModel.create({
+            name,
+            category,
+            price,
+            description,
+            stock,
+            image,
+        });
+
+        res.status(201).json({
+            success: true,
+            message: 'Product created successfully',
+            data: newProduct,
+        });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
@@ -68,11 +240,42 @@ const createProduct = (req, res) => {
 // PUT /api/products/:id - Update a product by ID
 const updateProduct = (req, res) => {
     try {
-        const product = productModel.update(req.params.id, req.body);
-        if (!product) {
-            return res.status(404).json({ success: false, message: 'Product not found' });
+        const { id } = req.params;
+
+        if (!id || id.trim() === '') {
+            return res.status(400).json({
+                success: false,
+                message: 'Product ID is required',
+            });
         }
-        res.status(200).json({ success: true, data: product });
+
+        // Check if product exists
+        const existingProduct = productModel.findById(id);
+        if (!existingProduct) {
+            return res.status(404).json({
+                success: false,
+                message: 'Product not found',
+            });
+        }
+
+        // Validate data if provided
+        const dataToValidate = { ...existingProduct, ...req.body };
+        const validation = productModel.validateProductData(dataToValidate);
+
+        if (!validation.isValid) {
+            return res.status(400).json({
+                success: false,
+                message: 'Data validation failed',
+                errors: validation.errors,
+            });
+        }
+
+        const updatedProduct = productModel.update(id, req.body);
+        res.status(200).json({
+            success: true,
+            message: 'Product updated successfully',
+            data: updatedProduct,
+        });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
@@ -81,11 +284,112 @@ const updateProduct = (req, res) => {
 // DELETE /api/products/:id - Delete a product by ID
 const deleteProduct = (req, res) => {
     try {
-        const deleted = productModel.remove(req.params.id);
-        if (!deleted) {
-            return res.status(404).json({ success: false, message: 'Product not found' });
+        const { id } = req.params;
+
+        if (!id || id.trim() === '') {
+            return res.status(400).json({
+                success: false,
+                message: 'Product ID is required',
+            });
         }
-        res.status(200).json({ success: true, message: 'Product deleted successfully' });
+
+        const deleted = productModel.remove(id);
+        if (!deleted) {
+            return res.status(404).json({
+                success: false,
+                message: 'Product not found',
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Product deleted successfully',
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// POST /api/products/:id/buy/:quantity - Purchase product (reduce stock)
+const purchaseProduct = (req, res) => {
+    try {
+        const { id, quantity } = req.params;
+
+        if (!id || id.trim() === '') {
+            return res.status(400).json({
+                success: false,
+                message: 'Product ID is required',
+            });
+        }
+
+        const qty = parseInt(quantity);
+        if (isNaN(qty) || qty <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Quantity must be a positive number',
+            });
+        }
+
+        const product = productModel.findById(id);
+        if (!product) {
+            return res.status(404).json({
+                success: false,
+                message: 'Product not found',
+            });
+        }
+
+        if (product.stock < qty) {
+            return res.status(400).json({
+                success: false,
+                message: `Insufficient stock. Available: ${product.stock}, Requested: ${qty}`,
+            });
+        }
+
+        const updatedProduct = productModel.updateStock(id, qty);
+        res.status(200).json({
+            success: true,
+            message: 'Product purchased successfully',
+            data: updatedProduct,
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// POST /api/products/:id/restock/:quantity - Restock product (increase stock)
+const restockProduct = (req, res) => {
+    try {
+        const { id, quantity } = req.params;
+
+        if (!id || id.trim() === '') {
+            return res.status(400).json({
+                success: false,
+                message: 'Product ID is required',
+            });
+        }
+
+        const qty = parseInt(quantity);
+        if (isNaN(qty) || qty <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Quantity must be a positive number',
+            });
+        }
+
+        const product = productModel.findById(id);
+        if (!product) {
+            return res.status(404).json({
+                success: false,
+                message: 'Product not found',
+            });
+        }
+
+        const updatedProduct = productModel.restockProduct(id, qty);
+        res.status(200).json({
+            success: true,
+            message: 'Product restocked successfully',
+            data: updatedProduct,
+        });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
@@ -95,7 +399,13 @@ module.exports = {
     getAllProducts,
     getProductById,
     getProductsByCategory,
+    searchProducts,
+    filterProducts,
+    getAllCategories,
+    getLowStockProducts,
     createProduct,
     updateProduct,
     deleteProduct,
+    purchaseProduct,
+    restockProduct,
 };

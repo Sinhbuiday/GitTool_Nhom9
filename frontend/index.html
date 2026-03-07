@@ -12,9 +12,21 @@
 <body>
 
     <header class="header">
-        <div class="container">
-            <h1>GitTool Nhom9</h1>
-            <p class="subtitle">Full-Stack Web Application</p>
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h1>GitTool Nhom9</h1>
+                <p class="subtitle">Full-Stack Web Application</p>
+            </div>
+            <nav>
+                <ul style="list-style: none; display: flex; gap: 1.5rem;">
+                    <li><a href="index.html" style="color: white; text-decoration: none; font-weight: 700;">Home</a>
+                    </li>
+                    <li><a href="product.html"
+                            style="color: white; text-decoration: none; font-weight: 500;">Products</a></li>
+                    <li><a href="category.html"
+                            style="color: white; text-decoration: none; font-weight: 500;">Categories</a></li>
+                </ul>
+            </nav>
         </div>
     </header>
 
@@ -22,7 +34,8 @@
         <section id="hero">
             <h2>Welcome to GitTool Nhom9</h2>
             <p>This is the frontend entry point. Connect it to the backend API running at
-                <code>http://localhost:5000/api</code>.</p>
+                <code>http://localhost:5000/api</code>.
+            </p>
             <button id="fetchUsersBtn" class="btn">Load Users from API</button>
             <button id="showAddBookBtn" class="btn" style="margin-left:1rem;">Add Book</button>
         </section>

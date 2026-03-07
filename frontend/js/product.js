@@ -9,6 +9,7 @@ const API_BASE = 'http://localhost:5000/api';
 let allProducts = [];
 let filteredProducts = [];
 let currentProduct = null;
+let isLoading = false;
 
 // DOM References
 const productForm = document.getElementById('productForm');
@@ -16,17 +17,12 @@ const productGrid = document.getElementById('productGrid');
 const searchInput = document.getElementById('searchInput');
 const categoryFilter = document.getElementById('categoryFilter');
 const productModal = document.getElementById('productModal');
+const editModal = document.getElementById('editModal');
+const loadingModal = document.getElementById('loadingModal');
+const toastContainer = document.getElementById('toastContainer');
+
+// View Modal elements
 const closeModal = document.getElementById('closeModal');
-
-// Form inputs
-const prodNameInput = document.getElementById('prodName');
-const prodCategoryInput = document.getElementById('prodCategory');
-const prodPriceInput = document.getElementById('prodPrice');
-const prodStockInput = document.getElementById('prodStock');
-const prodDescInput = document.getElementById('prodDesc');
-const prodImageInput = document.getElementById('prodImage');
-
-// Modal elements
 const modalImage = document.getElementById('modalImage');
 const modalName = document.getElementById('modalName');
 const modalCategory = document.getElementById('modalCategory');
@@ -35,6 +31,25 @@ const modalPrice = document.getElementById('modalPrice');
 const modalStock = document.getElementById('modalStock');
 const editBtn = document.getElementById('editBtn');
 const deleteBtn = document.getElementById('deleteBtn');
+
+// Edit Modal elements
+const closeEditModal = document.getElementById('closeEditModal');
+const editForm = document.getElementById('editForm');
+const cancelEditBtn = document.getElementById('cancelEditBtn');
+const editProdName = document.getElementById('editProdName');
+const editProdCategory = document.getElementById('editProdCategory');
+const editProdPrice = document.getElementById('editProdPrice');
+const editProdStock = document.getElementById('editProdStock');
+const editProdDesc = document.getElementById('editProdDesc');
+const editProdImage = document.getElementById('editProdImage');
+
+// Form inputs
+const prodNameInput = document.getElementById('prodName');
+const prodCategoryInput = document.getElementById('prodCategory');
+const prodPriceInput = document.getElementById('prodPrice');
+const prodStockInput = document.getElementById('prodStock');
+const prodDescInput = document.getElementById('prodDesc');
+const prodImageInput = document.getElementById('prodImage');
 
 // Color palette for product cards
 const colors = ['#6366f1', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#3b82f6', '#ef4444', '#14b8a6'];

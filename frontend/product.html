@@ -94,9 +94,9 @@
 
     </main>
 
-    <!-- Product Detail Modal -->
+    <!-- Product View Modal -->
     <div id="productModal" class="modal hidden">
-        <div class="modal-content">
+        <div class="modal-content modal-view">
             <button class="modal-close" id="closeModal">&times;</button>
             <div class="modal-body">
                 <img id="modalImage" src="" alt="" class="modal-image">
@@ -117,13 +117,70 @@
                     </div>
 
                     <div class="modal-actions">
-                        <button class="btn-primary" id="editBtn">Edit</button>
-                        <button class="btn-danger" id="deleteBtn">Delete</button>
+                        <button class="btn-primary" id="editBtn">Edit Product</button>
+                        <button class="btn-danger" id="deleteBtn">Delete Product</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Product Edit Modal -->
+    <div id="editModal" class="modal hidden">
+        <div class="modal-content modal-edit">
+            <button class="modal-close" id="closeEditModal">&times;</button>
+            <h2>Edit Product</h2>
+            <form id="editForm" class="product-form">
+                <div class="form-row">
+                    <div class="input-container">
+                        <label for="editProdName">Product Name</label>
+                        <input type="text" id="editProdName" class="premium-input" required>
+                    </div>
+                    <div class="input-container">
+                        <label for="editProdCategory">Category</label>
+                        <input type="text" id="editProdCategory" class="premium-input" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-container">
+                        <label for="editProdPrice">Price ($)</label>
+                        <input type="number" id="editProdPrice" class="premium-input" step="0.01" min="0" required>
+                    </div>
+                    <div class="input-container">
+                        <label for="editProdStock">Stock Quantity</label>
+                        <input type="number" id="editProdStock" class="premium-input" min="0" required>
+                    </div>
+                </div>
+
+                <div class="input-container">
+                    <label for="editProdDesc">Description</label>
+                    <textarea id="editProdDesc" class="premium-input" rows="3"></textarea>
+                </div>
+
+                <div class="input-container">
+                    <label for="editProdImage">Image URL</label>
+                    <input type="url" id="editProdImage" class="premium-input">
+                </div>
+
+                <div class="modal-form-actions">
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                    <button type="button" class="btn-secondary" id="cancelEditBtn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Loading Modal -->
+    <div id="loadingModal" class="modal hidden">
+        <div class="modal-content modal-loading">
+            <div class="spinner"></div>
+            <p id="loadingText">Loading...</p>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
 
     <footer class="footer">
         <div class="container">

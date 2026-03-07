@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Categories | Full-Stack App</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/category.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="header">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h1>◈ GitTool Nhom9</h1>
+                <p class="subtitle">Premium Management Dashboard</p>
+            </div>
+            <nav>
+                <ul style="list-style: none; display: flex; gap: 1.5rem;">
+                    <li><a href="index.html" style="color: white; text-decoration: none; font-weight: 500;">Home</a></li>
+                    <li><a href="product.html" style="color: white; text-decoration: none; font-weight: 500;">Products</a></li>
+                    <li><a href="category.html" style="color: white; text-decoration: none; font-weight: 700; border-bottom: 2px solid white;">Categories</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="category-dashboard">
+        
+        <!-- Add Category Section -->
+        <section class="glass-card">
+            <div class="header-flex">
+                <h2>Categories</h2>
+            </div>
+
+            <form id="categoryForm" class="category-form">
+                <div class="input-container">
+                    <label for="catName">Name</label>
+                    <input type="text" id="catName" class="premium-input" placeholder="e.g. Technology" required>
+                </div>
+                <div class="input-container">
+                    <label for="catDesc">Description</label>
+                    <input type="text" id="catDesc" class="premium-input" placeholder="Brief details about this category">
+                </div>
+                <button type="submit" class="btn-premium">Add New</button>
+            </form>
+        </section>
+
+        <!-- Category List Grid -->
+        <div id="categoryGrid" class="category-grid">
+            <!-- Cards will be injected here -->
+            <div class="empty-state">
+                <p>Loading your categories...</p>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 GitTool Team 9. Designed with Excellence.</p>
+        </div>
+    </footer>
+
+    <script src="js/category.js"></script>
+</body>
+</html>

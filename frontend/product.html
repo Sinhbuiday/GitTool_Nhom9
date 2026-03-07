@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products | GitTool Nhom9</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/product.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="header">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h1>◈ GitTool Nhom9</h1>
+                <p class="subtitle">Product Store</p>
+            </div>
+            <nav>
+                <ul style="list-style: none; display: flex; gap: 1.5rem;">
+                    <li><a href="index.html" style="color: white; text-decoration: none; font-weight: 500;">Home</a></li>
+                    <li><a href="product.html" style="color: white; text-decoration: none; font-weight: 700; border-bottom: 2px solid white;">Products</a></li>
+                    <li><a href="category.html" style="color: white; text-decoration: none; font-weight: 500;">Categories</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="product-dashboard">
+        
+        <!-- Add Product Section -->
+        <section class="glass-card">
+            <div class="header-flex">
+                <h2>Add New Product</h2>
+            </div>
+
+            <form id="productForm" class="product-form">
+                <div class="form-row">
+                    <div class="input-container">
+                        <label for="prodName">Product Name</label>
+                        <input type="text" id="prodName" class="premium-input" placeholder="e.g. Laptop Pro 15" required>
+                    </div>
+                    <div class="input-container">
+                        <label for="prodCategory">Category</label>
+                        <input type="text" id="prodCategory" class="premium-input" placeholder="e.g. Electronics" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-container">
+                        <label for="prodPrice">Price ($)</label>
+                        <input type="number" id="prodPrice" class="premium-input" placeholder="0.00" step="0.01" min="0" required>
+                    </div>
+                    <div class="input-container">
+                        <label for="prodStock">Stock Quantity</label>
+                        <input type="number" id="prodStock" class="premium-input" placeholder="0" min="0" required>
+                    </div>
+                </div>
+
+                <div class="input-container">
+                    <label for="prodDesc">Description</label>
+                    <textarea id="prodDesc" class="premium-input" placeholder="Brief details about this product" rows="3"></textarea>
+                </div>
+
+                <div class="input-container">
+                    <label for="prodImage">Image URL (optional)</label>
+                    <input type="url" id="prodImage" class="premium-input" placeholder="https://example.com/image.jpg">
+                </div>
+
+                <button type="submit" class="btn-premium">Add Product</button>
+            </form>
+        </section>
+
+        <!-- Filter Section -->
+        <section class="glass-card filter-section">
+            <div class="filter-group">
+                <input type="text" id="searchInput" class="premium-input" placeholder="Search products...">
+                <select id="categoryFilter" class="premium-input">
+                    <option value="">All Categories</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- Product Grid -->
+        <div id="productGrid" class="product-grid">
+            <!-- Cards will be injected here -->
+            <div class="empty-state">
+                <p>Loading products...</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Product Detail Modal -->
+    <div id="productModal" class="modal hidden">
+        <div class="modal-content">
+            <button class="modal-close" id="closeModal">&times;</button>
+            <div class="modal-body">
+                <img id="modalImage" src="" alt="" class="modal-image">
+                <div class="modal-info">
+                    <h2 id="modalName"></h2>
+                    <p id="modalCategory" class="modal-category"></p>
+                    <p id="modalDesc" class="modal-desc"></p>
+                    
+                    <div class="modal-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Price:</span>
+                            <span class="detail-value" id="modalPrice"></span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Stock:</span>
+                            <span class="detail-value" id="modalStock"></span>
+                        </div>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button class="btn-primary" id="editBtn">Edit</button>
+                        <button class="btn-danger" id="deleteBtn">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 GitTool Team 9. All products reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/product.js"></script>
+</body>
+</html>

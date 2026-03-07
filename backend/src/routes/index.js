@@ -2,12 +2,9 @@ const express = require('express');
 const router = express.Router();
 
 const userController = require('../controllers/userController');
-<<<<<<< HEAD
 const bookController = require('../controllers/bookController');
-=======
 const categoryRoutes = require('./categoryRoutes');
 const productRoutes = require('./productRoutes');
->>>>>>> develop
 
 /**
  * User Routes
@@ -31,7 +28,7 @@ router.put('/users/:id', userController.updateUser);
 // DELETE /api/users/:id - Delete a user by ID
 router.delete('/users/:id', userController.deleteUser);
 
-<<<<<<< HEAD
+
 /**
  * Book Routes
  * Base path: /api/books
@@ -62,12 +59,11 @@ router.put('/books/:id', bookController.updateBook);
 
 // DELETE /api/books/:id - Delete a book by ID
 router.delete('/books/:id', bookController.deleteBook);
-=======
+
 // Category Routes
 router.use('/categories', categoryRoutes);
 
 // Product Routes
 router.use('/products', productRoutes);
->>>>>>> develop
 
 module.exports = router;

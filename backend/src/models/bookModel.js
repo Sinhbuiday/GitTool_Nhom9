@@ -7,20 +7,20 @@
 
 // In-memory data store - Hợp nhất dữ liệu từ cả hai nhánh
 let books = [
-    { 
-        id: '1', 
-        title: 'The Great Gatsby', 
-        author: 'F. Scott Fitzgerald', 
+    {
+        id: '1',
+        title: 'The Great Gatsby',
+        author: 'F. Scott Fitzgerald',
         isbn: '978-0-7432-7356-5',
         publisher: 'Scribner',
         year: 1925,
         category: 'Classic Fiction',
         price: 12.99
     },
-    { 
-        id: '2', 
-        title: 'To Kill a Mockingbird', 
-        author: 'Harper Lee', 
+    {
+        id: '2',
+        title: 'To Kill a Mockingbird',
+        author: 'Harper Lee',
         isbn: '978-0-06-112008-4',
         publisher: 'J.B. Lippincott',
         year: 1960,
@@ -45,21 +45,21 @@ const findById = (id) => books.find((b) => b.id === id) || null;
 
 // Find books by author
 const findByAuthor = (author) => {
-    return books.filter((b) => 
+    return books.filter((b) =>
         b.author.toLowerCase().includes(author.toLowerCase())
     );
 };
 
 // Find books by category
 const findByCategory = (category) => {
-    return books.filter((b) => 
+    return books.filter((b) =>
         b.category.toLowerCase().includes(category.toLowerCase())
     );
 };
 
 // Find books by title (search)
 const searchByTitle = (title) => {
-    return books.filter((b) => 
+    return books.filter((b) =>
         b.title.toLowerCase().includes(title.toLowerCase())
     );
 };
@@ -67,15 +67,15 @@ const searchByTitle = (title) => {
 // Create a new book
 const create = (bookData) => {
     const { title, author, isbn, publisher, year, category, price } = bookData;
-    const newBook = { 
-        id: generateId(), 
-        title, 
-        author, 
-        isbn, 
-        publisher, 
-        year, 
-        category, 
-        price 
+    const newBook = {
+        id: generateId(),
+        title,
+        author,
+        isbn,
+        publisher,
+        year,
+        category,
+        price
     };
     books.push(newBook);
     return newBook;
@@ -85,7 +85,7 @@ const create = (bookData) => {
 const update = (id, data) => {
     const index = books.findIndex((b) => b.id === id);
     if (index === -1) return null;
-    books[index] = { ...books[index], ...data, id }; 
+    books[index] = { ...books[index], ...data, id };
     return books[index];
 };
 

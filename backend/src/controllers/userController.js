@@ -41,8 +41,24 @@ const createUser = (req, res) => {
         if (!name || !email) {
             return res.status(400).json({ success: false, message: 'Name and email are required' });
         }
+
+        // Validate email format
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            return res.status(400).json({ success: false, message: 'Email must be a valid email address' });
+        }
+
+        // Check for duplicate email
+        const existingUser = userModel.findByEmail(email);
+        if (existingUser) {
+            return res.status(409).json({ success: false, message: 'Email is already in use' });
+        }
+
         const newUser = userModel.create({ name, email });
-        res.status(201).json({ success: true, data: newUser });
+        res.status(201).json({
+            success: true,
+            message: 'User created successfully',
+            data: newUser,
+        });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
@@ -51,11 +67,59 @@ const createUser = (req, res) => {
 // PUT /api/users/:id - Update a user
 const updateUser = (req, res) => {
     try {
-        const updatedUser = userModel.update(req.params.id, req.body);
-        if (!updatedUser) {
-            return res.status(404).json({ success: false, message: 'User not found' });
+        // Whitelist allowed fields for update
+        const allowedFields = ['name', 'email'];
+        const updateData = {};
+        allowedFields.forEach((field) => {
+            if (req.body[field] !== undefined) {
+                updateData[field] = req.body[field];
+            }
+        });
+
+        // Check if body contains any updatable fields
+        if (Object.keys(updateData).length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Request body is empty or contains no updatable fields',
+            });
         }
-        res.status(200).json({ success: true, data: updatedUser });
+
+        // Check if user exists
+        const existingUser = userModel.findById(req.params.id);
+        if (!existingUser) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found',
+            });
+        }
+
+        // Validate only the provided fields (partial update validation)
+        const validation = userModel.validateUpdateData(updateData);
+        if (!validation.isValid) {
+            return res.status(400).json({
+                success: false,
+                message: 'Data validation failed',
+                errors: validation.errors,
+            });
+        }
+
+        // Check for duplicate email if email is being updated
+        if (updateData.email) {
+            const emailUser = userModel.findByEmail(updateData.email);
+            if (emailUser && emailUser.id !== req.params.id) {
+                return res.status(409).json({
+                    success: false,
+                    message: 'Email is already in use by another user',
+                });
+            }
+        }
+
+        const updatedUser = userModel.update(req.params.id, updateData);
+        res.status(200).json({
+            success: true,
+            message: 'User updated successfully',
+            data: updatedUser,
+        });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }

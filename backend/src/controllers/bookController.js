@@ -139,13 +139,11 @@ const createBook = (req, res) => {
 // PUT /api/books/:id - Update a book
 const updateBook = (req, res) => {
     try {
-        // Check if book exists
         const existingBook = bookModel.findById(req.params.id);
         if (!existingBook) {
             return res.status(404).json({ success: false, message: 'Book not found' });
         }
         
-        // Validate numeric fields if provided
         if (req.body.year && isNaN(req.body.year)) {
             return res.status(400).json({ 
                 success: false, 
